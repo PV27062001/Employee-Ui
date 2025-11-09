@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080/api/v1";
+const API_BASE_URL = "https://employee-api-1-lpbw.onrender.com/api/v1";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -36,6 +36,7 @@ api.interceptors.response.use(
                     });
 
                     localStorage.setItem("access_token", res.data.access_token);
+                    localStorage.setItem("refresh_token", res.data.refresh_token); // ✅ update it
                     originalRequest.headers.Authorization = `Bearer ${res.data.access_token}`;
                     return api(originalRequest);
                 } catch (err) {

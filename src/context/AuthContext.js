@@ -2,32 +2,36 @@ import React, { createContext, useState, useEffect } from "react";
 
 export const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [role, setRole] = useState(null);
-
-    useEffect(() => {
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(() => {
+        // ✅ Restore user from localStorage on app start
         const storedUser = localStorage.getItem("user");
-        if (storedUser) setUser(JSON.parse(storedUser));
-    }, []);
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
+
+    // Save user to localStorage whenever it changes
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem("user", JSON.stringify(user));
+        } else {
+            localStorage.removeItem("user");
+        }
+    }, [user]);
 
     const login = (userData) => {
         setUser(userData);
-        setRole(userData.role);
-        localStorage.setItem("user", JSON.stringify(userData));
     };
 
     const logout = () => {
         setUser(null);
-        setRole(null);
-        localStorage.clear();
+        localStorage.removeItem("user");
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
     };
 
     return (
-        <AuthContext.Provider value={{ user, role, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
 };
-
-export default AuthProvider;
