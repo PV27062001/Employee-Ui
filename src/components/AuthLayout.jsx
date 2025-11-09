@@ -1,30 +1,40 @@
 import React from "react";
 
-const AuthLayout = ({ title, subtitle, children }) => {
+const AuthLayout = ({ children, title, subtitle, buttonText, onButtonClick }) => {
     return (
-        <div className="flex min-h-screen bg-white">
-            {/* Left Blue Panel */}
-            <div className="hidden md:flex w-1/2 bg-gradient-to-b from-blue-500 to-blue-800 items-center justify-center text-white">
-                <div className="text-center px-10">
-                    <h1 className="text-4xl font-bold mb-4">Employee Portal</h1>
-                    <p className="text-lg text-blue-100 mb-6">
-                        Empowering seamless HR management experience.
+        <div className="min-h-screen w-full flex justify-center items-center bg-gradient-to-b from-blue-300 via-blue-400 to-blue-700">
+            {/* Outer centered container */}
+            <div className="flex w-[80%] max-w-6xl h-[80vh] bg-white rounded-3xl overflow-hidden shadow-2xl border border-blue-100">
+                {/* LEFT SIDE */}
+                <div className="w-1/2 bg-gradient-to-b from-blue-500 to-blue-800 flex flex-col justify-center items-center text-white relative">
+                    <h1 className="text-4xl font-extrabold mb-4">Employee Portal</h1>
+                    <p className="text-center text-blue-100 max-w-[280px] text-sm leading-relaxed">
+                        The most popular peer-to-peer hiring platform at SEA
                     </p>
-                    <button className="bg-white text-blue-700 px-5 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
-                        Learn More
+                    <button
+                        onClick={onButtonClick}
+                        className="mt-8 bg-white text-blue-700 text-sm font-semibold px-8 py-3 rounded-full shadow hover:bg-gray-100 transition-all"
+                    >
+                        {buttonText}
                     </button>
+
+                    {/* Decorative circles */}
+                    <div className="absolute bottom-[-100px] left-[-100px] w-96 h-96 border-[2px] border-blue-300 rounded-full opacity-20"></div>
+                    <div className="absolute bottom-[-180px] left-[-180px] w-[500px] h-[500px] border-[2px] border-blue-200 rounded-full opacity-10"></div>
                 </div>
-            </div>
 
-            {/* Right Form Panel */}
-            <div className="flex w-full md:w-1/2 items-center justify-center">
-                <div className="max-w-md w-full p-8">
-                    <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                        {title}
-                    </h2>
-                    <p className="text-gray-500 mb-6">{subtitle}</p>
+                {/* RIGHT SIDE */}
+                <div className="w-1/2 flex justify-center items-center bg-white px-12">
+                    <div className="w-full max-w-sm">
+                        <div className="mb-10">
+                            <h2 className="text-gray-800 text-3xl font-semibold mb-1">
+                                {title}
+                            </h2>
+                            <p className="text-gray-500">{subtitle}</p>
+                        </div>
 
-                    {children}
+                        {children}
+                    </div>
                 </div>
             </div>
         </div>

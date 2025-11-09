@@ -1,71 +1,55 @@
-import React, { useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import api from "../api/axiosInstance";
 import { AuthContext } from "../context/AuthContext";
+import api from "../api/axiosInstance";
 import AuthLayout from "../components/AuthLayout";
 import AuthForm from "../components/AuthForm";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
-    const [form, setForm] = useState({ userName: "", password: "" });
-    const [loading, setLoading] = useState(false);
-    const { login } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
 
-    const handleChange = (e) =>
-        setForm({ ...form, [e.target.name]: e.target.value });
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleLogin = async ({ userName, password }) => {
         setLoading(true);
         try {
-            const res = await api.post("/user/login", form);
-            const { access_token, refresh_token } = res.data;
-            localStorage.setItem("access_token", access_token);
-            localStorage.setItem("refresh_token", refresh_token);
+            const res = await api.post("/user/login", { userName, password });
+            localStorage.setItem("access_token", res.data.access_token);
+            localStorage.setItem("refresh_token", res.data.refresh_token);
 
-            const decoded = jwtDecode(access_token);
-            const userRole = decoded.roles?.[0] || "USER";
-            const userName = decoded.sub;
-
-            login({ userName, role: userRole });
-            navigate(userRole === "ADMIN" ? "/admin" : "/dashboard");
+            const role = userName === "admin" ? "ADMIN" : "USER";
+            login({ userName, role });
+            navigate(role === "ADMIN" ? "/admin" : "/dashboard");
         } catch {
-            alert("Invalid credentials");
+            toast.error("Invalid credentials");
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <AuthLayout title="Hello Again!" subtitle="Welcome Back">
-            <AuthForm
-                fields={[
-                    {
-                        name: "userName",
-                        type: "text",
-                        placeholder: "Email Address",
-                        value: form.userName,
-                        onChange: handleChange,
-                        icon: "mail",
-                    },
-                    {
-                        name: "password",
-                        type: "password",
-                        placeholder: "Password",
-                        value: form.password,
-                        onChange: handleChange,
-                        icon: "lock",
-                    },
-                ]}
-                buttonLabel="Login"
-                loading={loading}
-                onSubmit={handleSubmit}
-                footerText="Don’t have an account?"
-                footerLink="Sign Up"
-                footerAction={() => navigate("/signup")}
-            />
-        </AuthLayout>
+        <>
+            <AuthLayout
+                title="Hello Again!"
+                subtitle="Welcome Back"
+                buttonText="Read More"
+                onButtonClick={() => toast.info("Coming soon!")}
+            >
+                <AuthForm mode="login" onSubmit={handleLogin} loading={loading} />
+                <p className="text-sm text-center text-gray-600 mt-6">
+                    Don’t have an account?{" "}
+                    <span
+                        onClick={() => navigate("/signup")}
+                        className="text-blue-600 font-semibold cursor-pointer hover:underline"
+                    >
+            Sign Up
+          </span>
+                </p>
+            </AuthLayout>
+            <ToastContainer position="bottom-right" autoClose={2000} />
+        </>
     );
 };
 

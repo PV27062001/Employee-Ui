@@ -1,55 +1,53 @@
-import React from "react";
-import { FiMail, FiLock, FiUser } from "react-icons/fi";
+import React, { useState } from "react";
 
 const AuthForm = ({
-                      fields,
-                      buttonLabel,
-                      loading,
+                      mode, // "login" | "signup"
                       onSubmit,
-                      footerText,
-                      footerLink,
-                      footerAction,
+                      loading,
                   }) => {
-    return (
-        <form onSubmit={onSubmit} className="space-y-5">
-            {fields.map((field, index) => (
-                <div
-                    key={index}
-                    className="flex items-center border border-gray-300 rounded-full px-4 py-2 focus-within:ring-2 focus-within:ring-blue-400"
-                >
-                    {field.icon === "mail" && <FiMail className="text-gray-500 mr-3" />}
-                    {field.icon === "lock" && <FiLock className="text-gray-500 mr-3" />}
-                    {field.icon === "user" && <FiUser className="text-gray-500 mr-3" />}
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState("");
 
-                    <input
-                        type={field.type}
-                        name={field.name}
-                        placeholder={field.placeholder}
-                        value={field.value}
-                        onChange={field.onChange}
-                        className="w-full outline-none text-gray-700"
-                        required
-                    />
-                </div>
-            ))}
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit({ userName, password });
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+                <input
+                    type="text"
+                    placeholder="Email Address"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    className="w-full border border-gray-200 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required
+                />
+            </div>
+
+            <div>
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full border border-gray-200 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    required
+                />
+            </div>
 
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white py-3 rounded-full hover:bg-blue-700 transition font-medium"
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white font-medium py-3 rounded-full hover:shadow-lg transition-all"
             >
-                {loading ? "Processing..." : buttonLabel}
+                {loading ? (mode === "login" ? "Logging in..." : "Signing up...") : mode === "login" ? "Login" : "Sign Up"}
             </button>
 
-            {footerText && (
-                <p className="text-center text-sm mt-6 text-gray-500">
-                    {footerText}{" "}
-                    <span
-                        onClick={footerAction}
-                        className="text-blue-600 hover:underline cursor-pointer"
-                    >
-            {footerLink}
-          </span>
+            {mode === "login" && (
+                <p className="text-center text-gray-500 text-sm mt-4 cursor-pointer hover:text-blue-600">
+                    Forgot Password
                 </p>
             )}
         </form>
