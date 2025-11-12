@@ -1,7 +1,6 @@
 import React from "react";
 
-// InterviewCard.jsx
- const InterviewCard = ({ department, status, onAccept, onReject }) => {
+const InterviewCard = ({ department, status, onApply, onAccept, onReject }) => {
     const statusColors = {
         ACCEPTED: "bg-green-100 text-green-800 border-green-300",
         REJECTED: "bg-red-100 text-red-800 border-red-300",
@@ -12,14 +11,25 @@ import React from "react";
         <div className="bg-white rounded-xl border shadow p-6 flex flex-col items-center justify-between hover:shadow-lg transition">
             <h3 className="text-lg font-semibold mb-3">{department}</h3>
 
-            {status ? (
+            {/* ✅ If no status, show Apply button */}
+            {!status ? (
+                <button
+                    onClick={onApply}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                    Apply for Interview
+                </button>
+            ) : (
                 <span
                     className={`px-4 py-1 rounded-full border font-medium ${statusColors[status]}`}
                 >
           {status}
         </span>
-            ) : (
-                <div className="flex space-x-3">
+            )}
+
+            {/* ✅ Optional: show Accept/Reject if pending */}
+            {status === "PENDING" && (
+                <div className="flex space-x-3 mt-3">
                     <button
                         onClick={onAccept}
                         className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
@@ -38,4 +48,4 @@ import React from "react";
     );
 };
 
- export default InterviewCard;
+export default InterviewCard;
