@@ -32,22 +32,14 @@ const Login = () => {
     return (
         <>
             <AuthLayout
-                title="Hello Again!"
-                subtitle="Welcome Back"
-                buttonText="Read More"
-                onButtonClick={() => toast.info("Coming soon!")}
+                title="Welcome Back 👋"
+                subtitle="Login to continue to your dashboard"
+                buttonText="Create New Account"
+                onButtonClick={() => navigate("/signup")}
             >
                 <AuthForm mode="login" onSubmit={handleLogin} loading={loading} />
-                <p className="text-sm text-center text-gray-600 mt-6">
-                    Don’t have an account?{" "}
-                    <span
-                        onClick={() => navigate("/signup")}
-                        className="text-blue-600 font-semibold cursor-pointer hover:underline"
-                    >
-            Sign Up
-          </span>
-                </p>
             </AuthLayout>
+
             <ToastContainer position="bottom-right" autoClose={2000} />
         </>
     );

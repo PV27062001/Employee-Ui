@@ -17,10 +17,11 @@ const Signup = () => {
         try {
             await api.post("/user/save-user", { userName, password });
             toast.success("Account created successfully!");
-            const res = await api.post("/user/login", { userName, password });
 
+            const res = await api.post("/user/login", { userName, password });
             localStorage.setItem("access_token", res.data.access_token);
             localStorage.setItem("refresh_token", res.data.refresh_token);
+
             login({ userName, role: "USER" });
             navigate("/dashboard");
         } catch {
@@ -33,22 +34,14 @@ const Signup = () => {
     return (
         <>
             <AuthLayout
-                title="Create Account"
-                subtitle="Sign up to get started"
+                title="Create Account ✨"
+                subtitle="Sign up to join the Employee Portal"
                 buttonText="Back to Login"
                 onButtonClick={() => navigate("/")}
             >
                 <AuthForm mode="signup" onSubmit={handleSignup} loading={loading} />
-                <p className="text-sm text-center text-gray-600 mt-6">
-                    Already have an account?{" "}
-                    <span
-                        onClick={() => navigate("/")}
-                        className="text-blue-600 font-semibold cursor-pointer hover:underline"
-                    >
-            Login
-          </span>
-                </p>
             </AuthLayout>
+
             <ToastContainer position="bottom-right" autoClose={2000} />
         </>
     );
