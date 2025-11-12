@@ -1,55 +1,62 @@
 import React, { useState } from "react";
 
-const AuthForm = ({
-                      mode, // "login" | "signup"
-                      onSubmit,
-                      loading,
-                  }) => {
-    const [userName, setUserName] = useState("");
-    const [password, setPassword] = useState("");
+const AuthForm = ({ mode, onSubmit, loading }) => {
+    const [formData, setFormData] = useState({ userName: "", password: "" });
+
+    const handleChange = (e) =>
+        setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({ userName, password });
+        onSubmit(formData);
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Username */}
             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Username
+                </label>
                 <input
                     type="text"
-                    placeholder="Email Address"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    className="w-full border border-gray-200 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    name="userName"
+                    value={formData.userName}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+                    placeholder="Enter your username"
                     required
                 />
             </div>
 
+            {/* Password */}
             <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Password
+                </label>
                 <input
                     type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full border border-gray-200 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm sm:text-base"
+                    placeholder="Enter your password"
                     required
                 />
             </div>
 
+            {/* Submit Button */}
             <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white font-medium py-3 rounded-full hover:shadow-lg transition-all"
+                className={`w-full py-2 sm:py-2.5 mt-3 text-white text-sm sm:text-base rounded-lg font-medium transition-all ${
+                    loading
+                        ? "bg-blue-300 cursor-not-allowed"
+                        : "bg-blue-600 hover:bg-blue-700 shadow-md"
+                }`}
             >
-                {loading ? (mode === "login" ? "Logging in..." : "Signing up...") : mode === "login" ? "Login" : "Sign Up"}
+                {loading ? "Please wait..." : mode === "login" ? "Login" : "Sign Up"}
             </button>
-
-            {mode === "login" && (
-                <p className="text-center text-gray-500 text-sm mt-4 cursor-pointer hover:text-blue-600">
-                    Forgot Password
-                </p>
-            )}
         </form>
     );
 };
